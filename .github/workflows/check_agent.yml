@@ -6,7 +6,7 @@ jobs:
   agentcheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -14,5 +14,6 @@ jobs:
           distribution: 'adopt'
           cache: maven
       - name: Build with Maven
+        run: pwd && ls -lR
         run: mvn versions:display-dependency-updates -f ./AgentTest/pom_agent.xml
 
