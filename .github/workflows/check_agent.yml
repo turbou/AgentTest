@@ -15,5 +15,4 @@ jobs:
           cache: maven
       - name: Build with Maven
         run: pwd && ls -lR
-        run: mvn versions:display-dependency-updates -f ./AgentTest/pom_agent.xml
 
