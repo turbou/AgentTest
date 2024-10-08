@@ -14,5 +14,5 @@ jobs:
           distribution: 'adopt'
           cache: maven
       - name: Build with Maven
-        run: mvn versions:display-dependency-updates -f pom_agent.xml
+        run: mvn versions:display-dependency-updates -f ./AgentTest/pom_agent.xml
 
