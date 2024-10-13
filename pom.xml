@@ -1,0 +1,14 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>id</groupId>
+  <artifactId>dl</artifactId>
+  <version>1</version>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.contrastsecurity</groupId>
+      <artifactId>contrast-agent</artifactId>
+      <version>3.12.0.26195</version>
+    </dependency>
+  </dependencies>
+</project>
