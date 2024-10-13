@@ -17,5 +17,5 @@ jobs:
         run: |
           pwd
           ls -lR
-          mvn --version
+          ./agent_check.sh
 
