@@ -18,4 +18,6 @@ jobs:
           pwd
           ls -lR
           mvn -f pom.xml help:evaluate -Dexpression=project.dependencies[0].version -q -DforceStdout
+          mvn versions:use-latest-versions -f pom.xml > /dev/null 2>&1
+          git diff pom.xml | grep '^+' | awk -F '[<>]' '/version/{print $3}'
 
