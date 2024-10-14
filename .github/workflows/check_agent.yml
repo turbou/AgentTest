@@ -28,6 +28,6 @@ jobs:
         with:
           payload: |
             {
-              "version": "$NEWER_VERSION"
+              "version": "${{ NEWER_VERSION }}"
             }
 
