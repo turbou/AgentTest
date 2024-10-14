@@ -17,5 +17,5 @@ jobs:
         run: |
           pwd
           ls -lR
-          ./agent_check.sh
+          mvn -f pom.xml help:evaluate -Dexpression=project.dependencies[0].version -q -DforceStdout
 
