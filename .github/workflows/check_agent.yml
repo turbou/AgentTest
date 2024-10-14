@@ -6,25 +6,28 @@ jobs:
   agentcheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.1
       - name: Set up JDK 11
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v4.4.0
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
       - name: Build with Maven
+        id: get-newer-version
         run: |
           ./agent_check.sh
-          pwd
-          ls -lR
-      - name: Send GitHub Action trigger data to Slack workflow
+          echo "NEWER_VERSION=`cat ./newer_version.txt`" >> "$GITHUB_OUTPUT"
+      - if: steps.get-newer-version.outputs.NEWER_VERSION != ''
+        name: Send GitHub Action trigger data to Slack workflow
         id: slack
         uses: slackapi/slack-github-action@v1.27.0
+        env:
+          NEWER_VERSION: ${{ steps.get-newer-version.outputs.NEWER_VERSION }}
         with:
           payload: |
             {
-              "foo": "Github Actionsからのテスト送信です。by およよ"
+              "version": "$NEWER_VERSION"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WORKFLOW_WEBHOOK_URL }} 
