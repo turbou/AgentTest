@@ -24,7 +24,7 @@ jobs:
         with:
           payload: |
             {
-              "foo": "Github Actionsからのテスト送信です。"
+              "foo": "Github Actionsからのテスト送信です。by およよ"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WORKFLOW_WEBHOOK_URL }} 
