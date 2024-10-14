@@ -15,7 +15,8 @@ mvn versions:use-latest-versions -f ${AGENT_POM_FILE} > /dev/null 2>&1
 if [ ! -e ${BACKUP_POM_FILE_NAME} ]; then
     # バックアップpomファイルが存在しないということはエージェントの更新がなかったということで終了
     echo "バックアップpomファイルが存在しないということはエージェントの更新がなかったということで終了"
-    exit 1
+    touch ./newer_version.txt
+    exit 0
 fi
 # pomのバックアップファイルをリネーム
 mv "${BACKUP_POM_FILE_NAME}" "pom_agent_${CURRENT_VERSION}.xml"
@@ -24,11 +25,10 @@ NEWER_VERSION=`git diff ${AGENT_POM_FILE} | grep '^+' | awk -F '[<>]' '/version/
 
 echo "${CURRENT_VERSION} -> ${NEWER_VERSION}"
 
-# 実際に最新版のエージェントをダウンロード
-mvn dependency:copy-dependencies -f ${AGENT_POM_FILE}
+echo ${NEWER_VERSION} > ./newer_version.txt
 
-pwd
-ls -laR
+# 実際に最新版のエージェントをダウンロード
+#mvn dependency:copy-dependencies -f ${AGENT_POM_FILE}
 
 # 最新バージョンとなったpomファイルをコミット、プッシュ
 #pwd
