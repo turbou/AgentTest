@@ -18,4 +18,14 @@ jobs:
           ./agent_check.sh
           pwd
           ls -lR
+      - name: Send GitHub Action trigger data to Slack workflow
+        id: slack
+        uses: slackapi/slack-github-action@v1.27.0
+        with:
+          payload: |
+            {
+              "foo": "Github Actionsからのテスト送信です。"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WORKFLOW_WEBHOOK_URL }} 
 
