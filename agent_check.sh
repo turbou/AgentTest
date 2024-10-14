@@ -5,6 +5,7 @@ BACKUP_POM_FILE_NAME='pom_agent.xml.versionsBackup'
 
 # 現在のエージェントバージョンを取得
 CURRENT_VERSION=`mvn -f ${AGENT_POM_FILE} help:evaluate -Dexpression=project.dependencies[0].version -q -DforceStdout`
+echo ${CURRENT_VERSION}
 
 #mvn versions:display-dependency-updates -f ${AGENT_POM_FILE}
 # バックアップpomファイルを削除
@@ -13,6 +14,7 @@ rm -f ${BACKUP_POM_FILE_NAME}
 mvn versions:use-latest-versions -f ${AGENT_POM_FILE} > /dev/null 2>&1
 if [ ! -e ${BACKUP_POM_FILE_NAME} ]; then
     # バックアップpomファイルが存在しないということはエージェントの更新がなかったということで終了
+    echo "バックアップpomファイルが存在しないということはエージェントの更新がなかったということで終了"
     exit 1
 fi
 # pomのバックアップファイルをリネーム
