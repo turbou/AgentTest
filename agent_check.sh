@@ -1,7 +1,7 @@
 #!/bin/sh
 
 AGENT_POM_FILE='pom.xml'
-BACKUP_POM_FILE_NAME='pom_agent.xml.versionsBackup'
+BACKUP_POM_FILE_NAME='pom.xml.versionsBackup'
 
 # 現在のエージェントバージョンを取得
 CURRENT_VERSION=`mvn -f ${AGENT_POM_FILE} help:evaluate -Dexpression=project.dependencies[0].version -q -DforceStdout`
@@ -26,6 +26,9 @@ echo "${CURRENT_VERSION} -> ${NEWER_VERSION}"
 
 # 実際に最新版のエージェントをダウンロード
 mvn dependency:copy-dependencies -f ${AGENT_POM_FILE}
+
+pwd
+ls -laR
 
 # 最新バージョンとなったpomファイルをコミット、プッシュ
 #pwd
