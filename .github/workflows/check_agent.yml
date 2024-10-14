@@ -28,6 +28,6 @@ jobs:
         with:
           payload: |
             {
-              "version": "${{ NEWER_VERSION }}"
+              "version": "${{ steps.get-newer-version.outputs.NEWER_VERSION }}"
             }
 
