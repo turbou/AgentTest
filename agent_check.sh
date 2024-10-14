@@ -6,6 +6,7 @@ BACKUP_POM_FILE_NAME='pom.xml.versionsBackup'
 # 現在のエージェントバージョンを取得
 CURRENT_VERSION=`mvn -f ${AGENT_POM_FILE} help:evaluate -Dexpression=project.dependencies[0].version -q -DforceStdout`
 echo ${CURRENT_VERSION}
+echo ${CURRENT_VERSION} > ./current_version.txt
 
 #mvn versions:display-dependency-updates -f ${AGENT_POM_FILE}
 # バックアップpomファイルを削除

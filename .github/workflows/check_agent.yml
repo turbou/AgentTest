@@ -17,17 +17,28 @@ jobs:
         id: get-newer-version
         run: |
           ./agent_check.sh
+          echo "CURRENT_VERSION=`cat ./current_version.txt`" >> "$GITHUB_OUTPUT"
           echo "NEWER_VERSION=`cat ./newer_version.txt`" >> "$GITHUB_OUTPUT"
       - if: steps.get-newer-version.outputs.NEWER_VERSION != ''
         name: Send GitHub Action trigger data to Slack workflow
         id: slack
         uses: slackapi/slack-github-action@v1.27.0
         env:
-          NEWER_VERSION: ${{ steps.get-newer-version.outputs.NEWER_VERSION }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WORKFLOW_WEBHOOK_URL }} 
         with:
           payload: |
             {
               "version": "${{ steps.get-newer-version.outputs.NEWER_VERSION }}"
             }
+      - name: Commit updated pom.xml
+        id: commit_push
+        run: |
+            git config core.filemode false
+            if ! git diff --exit-code --quiet ./pom.xml
+            then
+              git config user.name turbou
+              git config user.email turbou@i.softbank.jp
+              git commit -m "${{ steps.get-newer-version.outputs.CURRENT_VERSION }} -> ${{ steps.get-newer-version.outputs.NEWER_VERSION }}." ./pom.xml
+              git push
+            fi
 
