@@ -1,4 +1,4 @@
-name: Java Agent Check
+name: Java Agent Check New
 
 on:
   schedule: 
