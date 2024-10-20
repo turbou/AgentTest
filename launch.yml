@@ -1,0 +1,18 @@
+services:
+  petclinic:
+    container_name: petclinic
+    image: openjdk:8-jdk-alpine
+    ports:
+      - "8001:8001"
+    environment:
+      CONTRAST__API__URL: ${CONTRAST_API_URL}
+      CONTRAST__API__API_KEY: ${CONTRAST_API_API_KEY}
+      CONTRAST__API__SERVICE_KEY: ${CONTRAST_API_SERVICE_KEY}
+      CONTRAST__API__USER_NAME: ${CONTRAST_API_USER_NAME}
+      CONTRAST__APPLICATION__NAME: PetClinicOnDocker
+    volumes:
+      - "./spring-petclinic-1.5.1.jar:/work/spring-petclinic-1.5.1.jar"
+      - "./contrast.jar:/work/contrast.jar"
+    working_dir: /work
+    command: java -javaagent:/work/contrast.jar -jar ./spring-petclinic-1.5.1.jar --server.port=8001
+
