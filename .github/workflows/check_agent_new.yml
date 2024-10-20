@@ -43,7 +43,7 @@ jobs:
           CONTRAST__API__USER_NAME: ${{ secrets.CONTRAST_USER_NAME }} 
         run: |
             ./startup.sh &
-            sleep 30
+            sleep 60
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
