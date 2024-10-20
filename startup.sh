@@ -1,0 +1,15 @@
+java -javaagent:./contrast.jar \
+-Dcontrast.server.environment=development \
+-Dcontrast.server.name=Github Actions \
+-Dcontrast.agent.java.standalone_app_name=PetClinic_8001 \
+-Dcontrast.application.version=v8001 \
+-Dcontrast.agent.contrast_working_dir=contrast-8001/ \
+-Dcontrast.agent.logger.level=INFO \
+-Dcontrast.agent.logger.path=./agent.log \
+-Dcontrast.agent.polling.app_activity_ms=3000 \
+-Dcontrast.agent.polling.server_activity_ms=3000 \
+-Dcontrast.api.timeout_ms=1000 \
+-Dcontrast.assess.enable=true \
+-Dcontrast.protect.enable=true \
+-Dcontrast.application.session_metadata="branchName=feature/oyoyo-003" \
+-jar ./spring-petclinic-1.5.1.jar --server.port=8001
