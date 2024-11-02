@@ -26,10 +26,9 @@ jobs:
         id: agent_download
         run: |
             mvn clean
-            mvn dependency:copy-dependencies
+            mvn -q dependency:copy-dependencies
             mv target/dependency/contrast-*.jar ./contrast.jar
-      - if: steps.get-newer-version.outputs.NEWER_VERSION != ''
-        name: Launch PetClinic
+      - name: Launch PetClinic
         id: launch_petclinic
         env:
           CONTRAST_API_URL: ${{ env.CONTRAST_URL }} 
