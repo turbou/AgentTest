@@ -38,7 +38,7 @@ jobs:
           CONTRAST_API_USER_NAME: ${{ secrets.CONTRAST_USER_NAME }} 
         run: |
             docker compose -f launch.yml up -d
-            sleep 60
+            sleep 90
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
