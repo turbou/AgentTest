@@ -35,6 +35,7 @@ jobs:
         id: launch_petclinic
         run: |
             docker run -e CONTRAST__API__TOKEN="${{ secrets.CONTRAST_API_TOKEN }}" -d --network host --name petclinic-app petclinic
+            sleep 90
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
