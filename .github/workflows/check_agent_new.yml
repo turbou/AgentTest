@@ -28,6 +28,9 @@ jobs:
             mvn clean
             mvn -q dependency:copy-dependencies
             mv target/dependency/contrast-*.jar ./contrast.jar
+      - name: Build PetClinic
+        run: |
+            docker build -t petclinic .
       - name: Launch PetClinic
         id: launch_petclinic
         env:
@@ -36,8 +39,7 @@ jobs:
           CONTRAST_API_SERVICE_KEY: ${{ secrets.CONTRAST_SERVICE_KEY }} 
           CONTRAST_API_USER_NAME: ${{ secrets.CONTRAST_USER_NAME }} 
         run: |
-            docker compose -f launch.yml up -d
-            sleep 180
+            docker run -d --name petclinic-app -p 8001:8001 petclinic
             docker ps
       - name: Set up Python
         uses: actions/setup-python@v5
