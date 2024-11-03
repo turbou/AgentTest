@@ -6,7 +6,7 @@ def run(playwright: Playwright) -> None:
     context = browser.new_context()
     page = context.new_page()
     page.wait_for_load_state()
-    page.goto("http://petclinic-app:8001/")
+    page.goto("http://0.0.0.0:8001/")
     page.get_by_role("link", name="Home").click()
     page.get_by_role("link", name="Find owners").click()
     page.get_by_role("link", name="Veterinarians").click()
