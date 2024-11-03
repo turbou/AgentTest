@@ -35,10 +35,6 @@ jobs:
         id: launch_petclinic
         run: |
             docker run -e CONTRAST__API__TOKEN="${{ secrets.CONTRAST_API_TOKEN }}" -d --network host --name petclinic-app petclinic
-            docker ps
-            sleep 90
-      - name: Print container logs
-        run: docker logs petclinic-app
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -52,3 +48,5 @@ jobs:
       - name: Run Playwrite
         run: |
           python Davis.py
+      - name: Print container logs
+        run: docker logs petclinic-app
