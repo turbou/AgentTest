@@ -39,7 +39,7 @@ jobs:
           CONTRAST_API_SERVICE_KEY: ${{ secrets.CONTRAST_SERVICE_KEY }} 
           CONTRAST_API_USER_NAME: ${{ secrets.CONTRAST_USER_NAME }} 
         run: |
-            docker run -d --name petclinic-app -p 8001:8001 petclinic
+            docker run -d --network host --name petclinic-app -p 8001:8001 petclinic
             docker ps
       - name: Set up Python
         uses: actions/setup-python@v5
