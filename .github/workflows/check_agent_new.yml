@@ -33,13 +33,14 @@ jobs:
             docker build -t petclinic .
       - name: Launch PetClinic
         id: launch_petclinic
-        env:
-          CONTRAST_API_URL: ${{ env.CONTRAST_URL }} 
-          CONTRAST_API_API_KEY: ${{ secrets.CONTRAST_API_KEY }} 
-          CONTRAST_API_SERVICE_KEY: ${{ secrets.CONTRAST_SERVICE_KEY }} 
-          CONTRAST_API_USER_NAME: ${{ secrets.CONTRAST_USER_NAME }} 
         run: |
-            docker run -d --network host --name petclinic-app petclinic
+            docker run -d --network host \
+            -e CONTRAST_API_URL=${{ env.CONTRAST_URL }} \
+            -e CONTRAST_API_API_KEY=${{ secrets.CONTRAST_API_KEY }} \
+            -e CONTRAST_API_SERVICE_KEY=${{ secrets.CONTRAST_SERVICE_KEY }} \
+            -e CONTRAST_API_USER_NAME=${{ secrets.CONTRAST_USER_NAME }} \
+            -e CONTRAST__APPLICATION__NAME="PetClinicOnDocker" \
+            --name petclinic-app petclinic
             docker ps
       - name: Set up Python
         uses: actions/setup-python@v5
