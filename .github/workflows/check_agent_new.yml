@@ -50,8 +50,17 @@ jobs:
       - name: Set up Playwright
         run: |
           playwright install
+      - name: Reset Contrast Application
+        run: |
+          python reset_app.py
+          sleep 120
       - name: Run Playwrite
         run: |
           python Davis.py
+          sleep 30
       - name: Print container logs
         run: docker logs petclinic-app
+      - name: Verify result
+        run: |
+          python verify.py
+
