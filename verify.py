@@ -1,9 +1,21 @@
 import os
+import sys
 import json
 import html
 import requests
 import csv
 from datetime import datetime
+
+CHECK_RULE_LIST = [
+    "crypto-bad-mac",
+    "cache-controls-missing",
+    "clickjacking-control-missing",
+    "csp-header-insecure",
+    "csp-header-missing",
+    "xcontenttype-header-missing",
+    "crypto-bad-mac",
+    "hql-injection",
+]
 
 def main():
     env_not_found = False
@@ -50,6 +62,10 @@ def main():
         return
 
     print(app['app_id'])
+
+    err_msg_buffer = []
+
+    # 脆弱性チェック
     url_traces = '%s/traces/%s/ids' % (API_URL, app_id)
     r = requests.get(url_traces, headers=headers)
     data = r.json()
@@ -59,6 +75,13 @@ def main():
         r = requests.get(url_trace, headers=headers)
         data = r.json()
         print(data['trace']['rule_name'])
+        CHECK_RULE_LIST.remove(data['trace']['rule_name'])
+    if len(CHECK_RULE_LIST) > 0:
+        err_msg_buffer.append('これらの脆弱性が検出されていません。%s' % (', '.join(CHECK_RULE_LIST)))
+
+    if len(err_msg_buffer) > 0:
+        print('\n'.join(err_msg_buffer))
+        sys.exit(1)
 
 if __name__ == '__main__':
     main()
