@@ -34,10 +34,11 @@ def main():
     headers = {"Accept": "application/json", "API-Key": API_KEY, "Authorization": AUTHORIZATION}
 
     url_applications = '%s/applications/name' % (API_URL)
+    print(url_applications)
     r = requests.get(url_applications, headers=headers)
     data = r.json()
     #print(json.dumps(data, indent=4))
-    if not data['success']:
+    if not 'success' in data or not data['success']:
         print('Authorizationヘッダ, APIキー, 組織ID, TeamServerのURLが正しいか、ご確認ください。')
         return
     #print(len(data['traces']))
