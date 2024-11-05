@@ -36,6 +36,8 @@ jobs:
         run: |
             docker run -d \
               -e CONTRAST__API__TOKEN="${{ secrets.CONTRAST_API_TOKEN }}" \
+              -e CONTRAST__APPLICATION__NAME="PetClinicForAgentTest" \
+              -e CONTRAST__ASSESS__ENABLE="true" \
               --network host \
               --name petclinic-app petclinic
             sleep 90
