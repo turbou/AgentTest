@@ -37,8 +37,11 @@ jobs:
             docker run -d \
               -e CONTRAST__API__TOKEN="${{ secrets.CONTRAST_API_TOKEN }}" \
               -e CONTRAST__APPLICATION__NAME="PetClinicForAgentTest" \
-              -e CONTRAST__ASSESS__ENABLE="true" \
+              -e CONTRAST__ASSESS__ENABLE=true \
               -e CONTRAST__AGENT__LOGGER__LEVEL="DEBUG" \
+              -e CONTRAST__AGENT__LOGGER__PATH="/tmp/agent.log" \
+              -e ="DEBUG" \
+              -v /tmp:/tmp \
               --network host \
               --name petclinic-app petclinic
             sleep 90
@@ -64,8 +67,10 @@ jobs:
         run: |
           python Davis.py
           sleep 30
-      - name: Print container logs
+      - name: Print container log
         run: docker logs petclinic-app
+      - name: Print agent log
+        run: cat /tmp/agent.log
       - name: Verify result
         env:
           CONTRAST_AUTHORIZATION: ${{ secrets.CONTRAST_AUTHORIZATION }} 
