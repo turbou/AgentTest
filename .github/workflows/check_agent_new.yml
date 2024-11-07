@@ -40,7 +40,6 @@ jobs:
               -e CONTRAST__ASSESS__ENABLE=true \
               -e CONTRAST__AGENT__LOGGER__LEVEL="DEBUG" \
               -e CONTRAST__AGENT__LOGGER__PATH="/tmp/agent.log" \
-              -e ="DEBUG" \
               -v /tmp:/tmp \
               --network host \
               --name petclinic-app petclinic
