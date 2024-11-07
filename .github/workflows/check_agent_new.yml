@@ -38,7 +38,7 @@ jobs:
               -e CONTRAST__API__TOKEN="${{ secrets.CONTRAST_API_TOKEN }}" \
               -e CONTRAST__APPLICATION__NAME="PetClinicForAgentTest" \
               -e CONTRAST__ASSESS__ENABLE=true \
-              -e CONTRAST__AGENT__LOGGER__LEVEL="DEBUG" \
+              -e CONTRAST__AGENT__LOGGER__LEVEL="TRACE" \
               -e CONTRAST__AGENT__LOGGER__PATH="/tmp/agent.log" \
               -v /tmp:/tmp \
               --network host \
