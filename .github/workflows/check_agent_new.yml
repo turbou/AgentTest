@@ -43,7 +43,7 @@ jobs:
         id: build_petclinic
         run: |
             cd petclinicdemo
-            mvn clean package -DskipTests
+            mvn -q clean package -DskipTests
       - name: Build PetClinic Docker Image
         run: |
             docker build -t petclinic .
