@@ -131,7 +131,7 @@ def main():
                 all_crit_routes.append(sig)
 
     if len(all_routes) < 17:
-        err_msg_buffer.append('ルート数が足りません。%d/17' % (len(all_libraries)))
+        err_msg_buffer.append('ルート数が足りません。%d/17' % (len(all_routes)))
     if len(all_pass_routes) < 5:
         err_msg_buffer.append('ルート疎通済み数が足りません。%d/5' % (len(all_pass_routes)))
     if len(all_vuln_routes) < 2:

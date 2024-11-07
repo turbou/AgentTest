@@ -39,7 +39,6 @@ jobs:
               -e CONTRAST__SERVER__ENVIRONMENT="development" \
               -e CONTRAST__SERVER__NAME="GithubPipeline" \
               -e CONTRAST__APPLICATION__NAME="PetClinicForAgentTest" \
-              -e CONTRAST__ASSESS__ENABLE=true \
               -e CONTRAST__AGENT__LOGGER__LEVEL="DEBUG" \
               -e CONTRAST__AGENT__LOGGER__PATH="/tmp/agent.log" \
               -e CONTRAST__AGENT__POLLING__APP_ACTIVITY_MS=3000 \
