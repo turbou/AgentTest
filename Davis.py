@@ -1,4 +1,5 @@
 import re
+import time
 from playwright.sync_api import Playwright, sync_playwright, expect
 
 def run(playwright: Playwright) -> None:
@@ -8,9 +9,13 @@ def run(playwright: Playwright) -> None:
     page.wait_for_load_state()
     page.goto("http://0.0.0.0:8001/")
     page.get_by_role("link", name="Home").click()
+    time.sleep(0.5)
     page.get_by_role("link", name="Find owners").click()
+    time.sleep(0.5)
     page.get_by_role("link", name="Veterinarians").click()
+    time.sleep(0.5)
     page.get_by_role("link", name="Error").click()
+    time.sleep(0.5)
     page.get_by_role("link", name="Find owners").click()
     page.get_by_role("textbox").click()
     page.get_by_role("textbox").fill("Davis")
