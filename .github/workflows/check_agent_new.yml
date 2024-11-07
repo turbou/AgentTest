@@ -28,7 +28,23 @@ jobs:
             mvn clean
             mvn -q dependency:copy-dependencies
             mv target/dependency/contrast-*.jar ./contrast.jar
-      - name: Build PetClinic
+      - name: Clone PetClinicDemo
+        uses: actions/checkout@v4.2.1
+        with:
+          repository: 'turbou/PetClinicDemo'
+          path: 'petclinicdemo'
+      - name: Set up JDK 8
+        uses: actions/setup-java@v4.4.0
+        with:
+          java-version: '8'
+          distribution: 'temurin'
+          cache: maven
+      - name: Download Java Agent
+        id: agent_download
+        run: |
+            cd petclinicdemo
+            mvn clean package -DskipTests
+      - name: Build PetClinic Docker Image
         run: |
             docker build -t petclinic .
       - name: Launch PetClinic
