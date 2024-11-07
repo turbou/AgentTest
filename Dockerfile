@@ -1,4 +1,4 @@
-FROM eclipse-temurin:8-jre
+FROM eclipse-temurin:8-jdk
 ARG JAR_FILE=petclinicdemo/target/spring-petclinic-1.5.1.jar
 COPY contrast.jar contrast.jar
 ENV JAVA_TOOL_OPTIONS "-javaagent:contrast.jar"
