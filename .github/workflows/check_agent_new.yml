@@ -38,6 +38,7 @@ jobs:
               -e CONTRAST__API__TOKEN="${{ secrets.CONTRAST_API_TOKEN }}" \
               -e CONTRAST__APPLICATION__NAME="PetClinicForAgentTest" \
               -e CONTRAST__ASSESS__ENABLE="true" \
+              -e CONTRAST__AGENT__LOGGER__LEVEL="DEBUG" \
               --network host \
               --name petclinic-app petclinic
             sleep 90
@@ -58,7 +59,7 @@ jobs:
           CONTRAST_ORG_ID: ${{ vars.CONTRAST_ORG_ID }} 
         run: |
           python reset_app.py
-          sleep 120
+          sleep 60
       - name: Run Playwrite
         run: |
           python Davis.py
