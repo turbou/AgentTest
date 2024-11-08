@@ -7,7 +7,6 @@ import csv
 from datetime import datetime
 
 CHECK_RULE_LIST = [
-    #"crypto-bad-mac",
     "cache-controls-missing",
     "clickjacking-control-missing",
     "csp-header-insecure",
