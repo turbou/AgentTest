@@ -75,6 +75,7 @@ jobs:
               -e CONTRAST__AGENT__POLLING__APP_ACTIVITY_MS=3000 \
               -e CONTRAST__AGENT__POLLING__SERVER_ACTIVITY_MS=3000 \
               -e CONTRAST__API__TIMEOUT_MS=3000 \
+              -e CONTRAST__ASSESS__SAMPLING__ENABLE=true \
               -e CONTRAST__APPLICATION__SESSION_METADATA="branchName=${{ github.run_number }}" \
               -v /tmp:/tmp \
               --network host \
