@@ -11,6 +11,8 @@ def run(playwright: Playwright) -> None:
     page.get_by_role("link", name="Home").click()
     page.get_by_role("link", name="Find owners").click()
     page.get_by_role("link", name="Veterinarians").click()
+    page.goto("http://0.0.0.0:8001/vets.html")
+    page.goto("http://0.0.0.0:8001/")
     page.get_by_role("link", name="Error").click()
     page.get_by_role("link", name="Find owners").click()
     page.get_by_role("textbox").click()
