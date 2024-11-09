@@ -46,13 +46,21 @@ jobs:
             mvn -q clean package -DskipTests
       - name: Build PetClinic Docker Image
         run: |
-            docker build -t petclinic .
+            docker build --no-cache -t petclinic .
       - name: Launch PetClinic
         id: launch_petclinic
         run: |
             docker run -d \
               -e CONTRAST__API__TOKEN="${{ secrets.CONTRAST_API_TOKEN }}" \
-              -e CONTRAST_CONFIG_PATH="contrast_security.yaml" \
+              -e CONTRAST__SERVER__ENVIRONMENT="development" \
+              -e CONTRAST__SERVER__NAME="GithubPipeline" \
+              -e CONTRAST__APPLICATION__NAME="PetClinicForAgentTest" \
+              -e CONTRAST__AGENT__LOGGER__LEVEL="DEBUG" \
+              -e CONTRAST__AGENT__LOGGER__PATH="/tmp/agent.log" \
+              -e CONTRAST__AGENT__POLLING__APP_ACTIVITY_MS=3000 \
+              -e CONTRAST__AGENT__POLLING__SERVER_ACTIVITY_MS=3000 \
+              -e CONTRAST__API__TIMEOUT_MS=3000 \
+              -e CONTRAST__APPLICATION__SESSION_METADATA=version=${{ github.run_id }} \
               -v /tmp:/tmp \
               --network host \
               --name petclinic-app petclinic
