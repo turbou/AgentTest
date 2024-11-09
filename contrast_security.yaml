@@ -1,0 +1,10 @@
+application:
+  name: PetClinicForAgentTest
+  session_metadata: branchName=feature/oyoyo-003
+server:
+  name: GithubPipeline
+  environment: development
+agent:
+  logger:
+    path: /tmp/agent.log
+
