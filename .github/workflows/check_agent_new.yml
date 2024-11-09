@@ -28,6 +28,21 @@ jobs:
             mvn clean
             mvn -q dependency:copy-dependencies
             mv target/dependency/contrast-*.jar ./contrast.jar
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+      - name: Reset Contrast Application
+        env:
+          CONTRAST_AUTHORIZATION: ${{ secrets.CONTRAST_AUTHORIZATION }} 
+          CONTRAST_API_KEY: ${{ secrets.CONTRAST_API_KEY }} 
+          CONTRAST_ORG_ID: ${{ vars.CONTRAST_ORG_ID }} 
+        run: |
+          python reset_app.py
+          sleep 60
       - name: Clone PetClinicDemo
         uses: actions/checkout@v4.2.1
         with:
@@ -75,14 +90,6 @@ jobs:
       - name: Set up Playwright
         run: |
           playwright install
-      - name: Reset Contrast Application
-        env:
-          CONTRAST_AUTHORIZATION: ${{ secrets.CONTRAST_AUTHORIZATION }} 
-          CONTRAST_API_KEY: ${{ secrets.CONTRAST_API_KEY }} 
-          CONTRAST_ORG_ID: ${{ vars.CONTRAST_ORG_ID }} 
-        run: |
-          python reset_app.py
-          sleep 60
       - name: Run Playwrite
         run: |
           python Davis.py
