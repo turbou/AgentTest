@@ -83,9 +83,9 @@ def main():
         if data['trace']['rule_name'] in CHECK_RULE_LIST:
             exist_vul_msg.append(data['trace']['rule_name'])
             CHECK_RULE_LIST.remove(data['trace']['rule_name'])
-    result_msg_buffer.append('これらの脆弱性が検出されました。%s' % ', '.join(exist_vul_msg ))
+    result_msg_buffer.append('+ これらの脆弱性が検出されました。(%d件)\n%s' % (len(exist_vul_msg), ''.join(list(map(lambda word: f'  - {word}\n', exist_vul_msg)))))
     if len(CHECK_RULE_LIST) > 0:
-        err_msg_buffer.append('これらの脆弱性が検出されていません。%s' % (', '.join(CHECK_RULE_LIST)))
+        err_msg_buffer.append('* これらの脆弱性が検出されていません。%s' % (', '.join(CHECK_RULE_LIST)))
 
     # ライブラリチェック
     all_libraries = []
@@ -115,11 +115,11 @@ def main():
                 all_vuln_libraries.append(library['hash'])
         libraryIncompleteFlg = totalCnt > len(all_libraries)
 
-    result_msg_buffer.append('%d/%d のライブラリを検知しました。' % (len(all_vuln_libraries), len(all_libraries)))
+    result_msg_buffer.append('+ %d/%d のライブラリを検知しました。' % (len(all_vuln_libraries), len(all_libraries)))
     if len(all_libraries) < 112:
-        err_msg_buffer.append('ライブラリの数が足りません。%d/112' % (len(all_libraries)))
+        err_msg_buffer.append('* ライブラリの数が足りません。%d/112' % (len(all_libraries)))
     if len(all_vuln_libraries) < 29:
-        err_msg_buffer.append('脆弱ライブラリの数が足りません。%d/29' % (len(all_vuln_libraries)))
+        err_msg_buffer.append('* 脆弱ライブラリの数が足りません。%d/29' % (len(all_vuln_libraries)))
 
     # /Contrast/api/ng/442311fd-c9d6-44a9-a00b-2b03db2d816c/applications/9c6ce833-0fea-46e1-875e-c5371ecd2bbe/route?expand=skip_links
     all_routes = []
@@ -139,19 +139,19 @@ def main():
             if route['critical_vulnerabilities'] > 0:
                 all_crit_routes.append(sig)
 
-    result_msg_buffer.append('ルートカバレッジは以下のとおりです。')
-    result_msg_buffer.append('- ルート数                  : %d' % len(all_routes))
-    result_msg_buffer.append('- 疎通済み数                : %d' % len(all_pass_routes))
-    result_msg_buffer.append('  - 脆弱性検知数            : %d' % len(all_vuln_routes))
-    result_msg_buffer.append('  - クリティカル脆弱性検知数: %d' % len(all_crit_routes))
+    result_msg_buffer.append('+ ルートカバレッジは以下のとおりです。')
+    result_msg_buffer.append('  - ルート数: %d' % len(all_routes))
+    result_msg_buffer.append('  - 疎通済み数: %d' % len(all_pass_routes))
+    result_msg_buffer.append('    - 脆弱性検知数: %d' % len(all_vuln_routes))
+    result_msg_buffer.append('    - クリティカル脆弱性検知数: %d' % len(all_crit_routes))
     if len(all_routes) < 17:
-        err_msg_buffer.append('ルート数が足りません。%d/17' % (len(all_routes)))
+        err_msg_buffer.append('* ルート数が足りません。%d/17' % (len(all_routes)))
     if len(all_pass_routes) < 5:
-        err_msg_buffer.append('ルート疎通済み数が足りません。%d/5' % (len(all_pass_routes)))
+        err_msg_buffer.append('* ルート疎通済み数が足りません。%d/5' % (len(all_pass_routes)))
     if len(all_vuln_routes) < 1:
-        err_msg_buffer.append('ルート疎通済み(脆弱性検知)数が足りません。%d/1' % (len(all_vuln_routes)))
+        err_msg_buffer.append('* ルート疎通済み(脆弱性検知)数が足りません。%d/1' % (len(all_vuln_routes)))
     if len(all_crit_routes) < 1:
-        err_msg_buffer.append('ルート疎通済み(クリティカル脆弱性検知)数が足りません。%d/2' % (len(all_crit_routes)))
+        err_msg_buffer.append('* ルート疎通済み(クリティカル脆弱性検知)数が足りません。%d/2' % (len(all_crit_routes)))
 
     url_attestation = '%s/applications/%s/attestation' % (API_URL, app_id)
     payload = '{"vulnerabilityStatuses":[],"vulnerabilitySeverities":[],"vulnerabilityTypes":[],"vulnerabilityTags":[],"serverEnvironments":[],"serverTags":[],"complianceReports":["owasp-2021"],"showVulnerabilitiesDetails":false,"showRouteObservations":true}'
@@ -187,14 +187,14 @@ def main():
             page = pdf_reader.pages[page_num]
             text += page.extract_text()
         if 'HQLインジェクション' in text:
-            result_msg_buffer.append('レポートPDFは日本語で出力されていません。')
+            result_msg_buffer.append('+ レポートPDFは日本語で出力されていません。')
         else:
-            err_msg_buffer.append('レポートPDFには「HQLインジェクション」が含まれていません。')
+            err_msg_buffer.append('* レポートPDFには「HQLインジェクション」が含まれていません。')
 
     print('結果発表')
-    print('---------------------------------------------------------------------------')
+    print('-------------------------------------------------')
     print('\n'.join(result_msg_buffer))
-    print('---------------------------------------------------------------------------')
+    print('-------------------------------------------------')
     if len(err_msg_buffer) > 0:
         print('検証が失敗しました。')
         print('\n'.join(err_msg_buffer))
