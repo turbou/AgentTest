@@ -66,9 +66,11 @@ def main():
         return
     #print(app['app_id'])
 
+    result_msg_buffer = []
     err_msg_buffer = []
 
     # 脆弱性チェック
+    exist_vul_msg = []
     url_traces = '%s/traces/%s/ids' % (API_URL, app_id)
     r = requests.get(url_traces, headers=headers)
     data = r.json()
@@ -79,7 +81,9 @@ def main():
         data = r.json()
         #print(data['trace']['rule_name'])
         if data['trace']['rule_name'] in CHECK_RULE_LIST:
+            exist_vul_msg.append(data['trace']['rule_name'])
             CHECK_RULE_LIST.remove(data['trace']['rule_name'])
+    result_msg_buffer.append('これらの脆弱性が検出されました。%s' % ', '.join(exist_vul_msg ))
     if len(CHECK_RULE_LIST) > 0:
         err_msg_buffer.append('これらの脆弱性が検出されていません。%s' % (', '.join(CHECK_RULE_LIST)))
 
@@ -111,6 +115,7 @@ def main():
                 all_vuln_libraries.append(library['hash'])
         libraryIncompleteFlg = totalCnt > len(all_libraries)
 
+    result_msg_buffer.append('%d/%d のライブラリを検知しました。' % (len(all_vuln_libraries), len(all_libraries)))
     if len(all_libraries) < 112:
         err_msg_buffer.append('ライブラリの数が足りません。%d/112' % (len(all_libraries)))
     if len(all_vuln_libraries) < 29:
@@ -134,6 +139,11 @@ def main():
             if route['critical_vulnerabilities'] > 0:
                 all_crit_routes.append(sig)
 
+    result_msg_buffer.append('ルートカバレッジは以下のとおりです。')
+    result_msg_buffer.append('- ルート数                  : %d' % len(all_routes))
+    result_msg_buffer.append('- 疎通済み数                : %d' % len(all_pass_routes))
+    result_msg_buffer.append('  - 脆弱性検知数            : %d' % len(all_vuln_routes))
+    result_msg_buffer.append('  - クリティカル脆弱性検知数: %d' % len(all_crit_routes))
     if len(all_routes) < 17:
         err_msg_buffer.append('ルート数が足りません。%d/17' % (len(all_routes)))
     if len(all_pass_routes) < 5:
@@ -176,9 +186,15 @@ def main():
           for page_num in range(len(pdf_reader.pages)):
             page = pdf_reader.pages[page_num]
             text += page.extract_text()
-        if not 'HQLインジェクション' in text:
+        if 'HQLインジェクション' in text:
+            result_msg_buffer.append('レポートPDFは日本語で出力されていません。')
+        else:
             err_msg_buffer.append('レポートPDFには「HQLインジェクション」が含まれていません。')
 
+    print('結果発表')
+    print('---------------------------------------------------------------------------')
+    print('\n'.join(result_msg_buffer))
+    print('---------------------------------------------------------------------------')
     if len(err_msg_buffer) > 0:
         print('検証が失敗しました。')
         print('\n'.join(err_msg_buffer))
