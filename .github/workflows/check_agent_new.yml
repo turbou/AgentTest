@@ -130,10 +130,7 @@ jobs:
           CONTRAST_USER_NAME: ${{ vars.CONTRAST_USER_NAME }} 
         run: |
           python verify.py | tee ./output.txt
-          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
-          echo "RESULT<<$EOF" >> $GITHUB_OUTPUT
-          cat ./output.txt >> $GITHUB_OUTPUT
-          echo "$EOF" >> $GITHUB_OUTPUT
+          echo "RESULT=`cat ./output.txt | tr '\n' '\\n'`" >> "$GITHUB_OUTPUT"
       - if: steps.get-newer-version.outputs.NEWER_VERSION != ''
         name: Upload artifact report.pdf
         uses: actions/upload-artifact@v4.4.3
@@ -150,8 +147,7 @@ jobs:
           payload: |
             {   
               "version": "${{ steps.get-newer-version.outputs.NEWER_VERSION }}",
-              "result": |
-                "${{ steps.verify.outputs.RESULT }}"
+              "result": "${{ steps.verify.outputs.RESULT }}"
             }   
       - if: steps.get-newer-version.outputs.NEWER_VERSION != ''
         name: Commit updated pom.xml
