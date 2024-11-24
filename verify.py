@@ -4,6 +4,9 @@ import json
 import html
 import requests
 import csv
+import time
+import re
+import PyPDF2
 from datetime import datetime
 
 CHECK_RULE_LIST = [
@@ -18,22 +21,24 @@ CHECK_RULE_LIST = [
 
 def main():
     env_not_found = False
-    for env_key in ['CONTRAST_AUTHORIZATION', 'CONTRAST_API_KEY', 'CONTRAST_ORG_ID']:
+    for env_key in ['CONTRAST_AUTHORIZATION', 'CONTRAST_API_KEY', 'CONTRAST_ORG_ID', 'CONTRAST_USER_NAME']:
         if not env_key in os.environ:
             print('環境変数 %s が設定されていません。' % env_key)
             env_not_found |= True
     if env_not_found:
         print()
-        print('CONTRAST_BASEURL         : https://eval.contrastsecurity.com/Contrast')
-        print('CONTRAST_AUTHORIZATION   : XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX==')
-        print('CONTRAST_API_KEY         : XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
-        print('CONTRAST_ORG_ID          : XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX')
-        print('CONTRAST_APP_NAME        : e.g. PetClinicForAgentTest')
+        print('CONTRAST_BASEURL(optional)  : https://eval.contrastsecurity.com/Contrast')
+        print('CONTRAST_AUTHORIZATION      : XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX==')
+        print('CONTRAST_API_KEY            : XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+        print('CONTRAST_ORG_ID             : XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX')
+        print('CONTRAST_USER_NAME          : e.g. taka.shiozaki@contrastsecurity.com')
+        print('CONTRAST_APP_NAME(optional) : e.g. PetClinicForAgentTest')
         return
 
     API_KEY=os.environ['CONTRAST_API_KEY']
     AUTHORIZATION=os.environ['CONTRAST_AUTHORIZATION']
     ORG_ID=os.environ['CONTRAST_ORG_ID']
+    USER_NAME=os.environ['CONTRAST_USER_NAME']
     BASEURL='https://eval.contrastsecurity.com/Contrast'
     if 'CONTRAST_BASEURL' in os.environ:
         BASEURL=os.environ['CONTRAST_BASEURL']
@@ -42,7 +47,7 @@ def main():
         APP_NAME=os.environ['CONTRAST_APP_NAME']
     API_URL="%s/api/ng/%s" % (BASEURL, ORG_ID)
 
-    headers = {"Accept": "application/json", "API-Key": API_KEY, "Authorization": AUTHORIZATION}
+    headers = {"Accept": "application/json", "Content-Type": "application/json", "API-Key": API_KEY, "Authorization": AUTHORIZATION}
 
     url_applications = '%s/applications/name' % (API_URL)
     r = requests.get(url_applications, headers=headers)
@@ -138,11 +143,48 @@ def main():
     if len(all_crit_routes) < 1:
         err_msg_buffer.append('ルート疎通済み(クリティカル脆弱性検知)数が足りません。%d/2' % (len(all_crit_routes)))
 
-    if len(err_msg_buffer) > 0:
-        print('\n'.join(err_msg_buffer))
+    url_attestation = '%s/applications/%s/attestation' % (API_URL, app_id)
+    payload = '{"vulnerabilityStatuses":[],"vulnerabilitySeverities":[],"vulnerabilityTypes":[],"vulnerabilityTags":[],"serverEnvironments":[],"serverTags":[],"complianceReports":["owasp-2021"],"showVulnerabilitiesDetails":false,"showRouteObservations":true}'
+    r = requests.post(url_attestation, headers=headers, data=payload)
+    data = r.json()
+    if not data['success']:
+        print('コンプライアンスレポートの発行リクエストに失敗しました。')
         sys.exit(1)
 
-    print('すべての検証が成功しました。')
+    time.sleep(15)
+    url_notification = '%s/notifications?expand=skip_links&limit=10&offset=0' % (API_URL)
+    r = requests.get(url_notification, headers=headers)
+    data = r.json()
+    link_msg = None
+    sorted_data = sorted(data['notifications'], key=lambda x: x['timestamp'])
+    for n in sorted_data:
+        if n['source_type'] == 'REPORT_SUCCESS' and n['messageVariables']['applicationNameKey'] == APP_NAME:
+            link_msg = n['message']
+    pattern = r"ATTESTATION_REPORT_DOWNLOAD:(.*?)\$\$LINK_DELIM\$\$"
+    match = re.search(pattern, link_msg)
+    if match:
+        download_id = match.group(1)
+        url_download = '%s/reports/download/%s/%s' % (API_URL, USER_NAME, download_id)
+        r = requests.post(url_download, headers=headers, stream=True)
+        r.raise_for_status() 
+        with open('report.pdf', 'wb') as f:
+            for chunk in r.iter_content(chunk_size=8192): 
+                f.write(chunk)
+        text = ""
+        with open('report.pdf', 'rb') as pdf_file:
+          pdf_reader = PyPDF2.PdfReader(pdf_file)
+          for page_num in range(len(pdf_reader.pages)):
+            page = pdf_reader.pages[page_num]
+            text += page.extract_text()
+        if not 'HQLインジェクション' in text:
+            err_msg_buffer.append('レポートPDFには「HQLインジェクション」が含まれていません。')
+
+    if len(err_msg_buffer) > 0:
+        print('検証が失敗しました。')
+        print('\n'.join(err_msg_buffer))
+        sys.exit(1)
+    else:
+        print('検証が成功しました。')
 
 if __name__ == '__main__':
     main()
