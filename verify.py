@@ -33,7 +33,7 @@ def main():
         print('CONTRAST_ORG_ID             : XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX')
         print('CONTRAST_USER_NAME          : e.g. taka.shiozaki@contrastsecurity.com')
         print('CONTRAST_APP_NAME(optional) : e.g. PetClinicForAgentTest')
-        return
+        sys.exit(1)
 
     API_KEY=os.environ['CONTRAST_API_KEY']
     AUTHORIZATION=os.environ['CONTRAST_AUTHORIZATION']
