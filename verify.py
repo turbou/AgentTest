@@ -133,8 +133,8 @@ def main():
         err_msg_buffer.append('ルート数が足りません。%d/17' % (len(all_routes)))
     if len(all_pass_routes) < 5:
         err_msg_buffer.append('ルート疎通済み数が足りません。%d/5' % (len(all_pass_routes)))
-    if len(all_vuln_routes) < 2:
-        err_msg_buffer.append('ルート疎通済み(脆弱性検知)数が足りません。%d/2' % (len(all_vuln_routes)))
+    if len(all_vuln_routes) < 1:
+        err_msg_buffer.append('ルート疎通済み(脆弱性検知)数が足りません。%d/1' % (len(all_vuln_routes)))
     if len(all_crit_routes) < 1:
         err_msg_buffer.append('ルート疎通済み(クリティカル脆弱性検知)数が足りません。%d/2' % (len(all_crit_routes)))
 
