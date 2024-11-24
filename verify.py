@@ -83,7 +83,7 @@ def main():
         if data['trace']['rule_name'] in CHECK_RULE_LIST:
             exist_vul_msg.append(data['trace']['rule_name'])
             CHECK_RULE_LIST.remove(data['trace']['rule_name'])
-    result_msg_buffer.append('+ これらの脆弱性が検出されました。(%d件)\n%s' % (len(exist_vul_msg), ''.join(list(map(lambda word: f'  - {word}\n', exist_vul_msg)))))
+    result_msg_buffer.append('+ これらの脆弱性が検出されました。(%d件)\n%s' % (len(exist_vul_msg), ''.join(list(map(lambda word: f'  - {word}\n', exist_vul_msg))).rstrip("\n")))
     if len(CHECK_RULE_LIST) > 0:
         err_msg_buffer.append('* これらの脆弱性が検出されていません。%s' % (', '.join(CHECK_RULE_LIST)))
 
