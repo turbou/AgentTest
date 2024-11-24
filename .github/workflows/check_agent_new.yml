@@ -150,7 +150,8 @@ jobs:
           payload: |
             {   
               "version": "${{ steps.get-newer-version.outputs.NEWER_VERSION }}",
-              "result": "${{ steps.verify.outputs.RESULT }}"
+              "result": |
+                "${{ steps.verify.outputs.RESULT }}"
             }   
       - if: steps.get-newer-version.outputs.NEWER_VERSION != ''
         name: Commit updated pom.xml
