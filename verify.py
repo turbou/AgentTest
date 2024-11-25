@@ -191,16 +191,25 @@ def main():
         else:
             err_msg_buffer.append('* レポートPDFには「HQLインジェクション」が含まれていません。')
 
-    print('結果発表')
-    print('-------------------------------------------------')
-    print('\n'.join(result_msg_buffer))
-    print('-------------------------------------------------')
+    output_buffer = []
+    output_buffer.append('結果発表') 
+    output_buffer.append('-------------------------------------------------') 
+    ouput_buffer.append('\n'.join(result_msg_buffer))
+    output_buffer.append('-------------------------------------------------') 
     if len(err_msg_buffer) > 0:
-        print('検証が失敗しました。')
-        print('\n'.join(err_msg_buffer))
-        sys.exit(1)
+        output_buffer.append('検証が失敗しました。')
+        output_buffer.append('\n'.join(err_msg_buffer))
     else:
-        print('検証が成功しました。')
+        output_buffer.append('検証が成功しました。')
+
+    with open("output.txt", "w") as f:
+        for output in output_buffer:
+            f.write(output + "\\n")
+    print('\n'.join(output_buffer)) 
+
+    if len(err_msg_buffer) > 0:
+        sys.exit(1)
+    sys.exit(0)
 
 if __name__ == '__main__':
     main()

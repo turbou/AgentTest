@@ -121,7 +121,7 @@ jobs:
         name: Print agent log
         run: cat /tmp/agent.log
       - if: steps.get-newer-version.outputs.NEWER_VERSION != ''
-        id: verify
+        id: verify_process
         name: Verify result
         env:
           CONTRAST_AUTHORIZATION: ${{ secrets.CONTRAST_AUTHORIZATION }} 
@@ -129,10 +129,18 @@ jobs:
           CONTRAST_ORG_ID: ${{ vars.CONTRAST_ORG_ID }} 
           CONTRAST_USER_NAME: ${{ vars.CONTRAST_USER_NAME }} 
         run: |
-          python verify.py | tee ./output.txt
-          echo "RESULT<<EOF" >> "$GITHUB_OUTPUT"
-          cat ./output.txt >> "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
+          python verify.py
+      - if: steps.get-newer-version.outputs.NEWER_VERSION != ''
+        name: Upload artifact Verify output
+        uses: actions/upload-artifact@v4.4.3
+        with:
+          name: verify-output
+          path: output.txt
+      - if: steps.get-newer-version.outputs.NEWER_VERSION != ''
+        id: verify_output
+        name: Output Verify Result
+        run: |
+          echo "RESULT=`cat ./output.txt`" >> "$GITHUB_OUTPUT"
       - if: steps.get-newer-version.outputs.NEWER_VERSION != ''
         name: Upload artifact report.pdf
         uses: actions/upload-artifact@v4.4.3
