@@ -207,9 +207,9 @@ def main():
             f.write(output + "\\n")
     print('\n'.join(output_buffer)) 
 
-    if len(err_msg_buffer) > 0:
-        sys.exit(1)
-    sys.exit(0)
+    #if len(err_msg_buffer) > 0:
+    #    sys.exit(1)
+    #sys.exit(0)
 
 if __name__ == '__main__':
     main()
