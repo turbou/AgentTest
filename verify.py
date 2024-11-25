@@ -192,15 +192,16 @@ def main():
             err_msg_buffer.append('* レポートPDFには「HQLインジェクション」が含まれていません。')
 
     output_buffer = []
-    output_buffer.append('結果発表') 
-    output_buffer.append('-------------------------------------------------') 
+    output_buffer.append('検証結果') 
+    output_buffer.append('===========================================================')
     output_buffer.append('\\n'.join(result_msg_buffer))
-    output_buffer.append('-------------------------------------------------') 
+    output_buffer.append('-----------------------------------------------------------') 
     if len(err_msg_buffer) > 0:
         output_buffer.append('検証が失敗しました。')
         output_buffer.append('\\n'.join(err_msg_buffer))
     else:
         output_buffer.append('検証が成功しました。')
+    output_buffer.append('===========================================================')
 
     with open("output.txt", "w") as f:
         for output in output_buffer:
