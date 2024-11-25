@@ -187,7 +187,7 @@ def main():
             page = pdf_reader.pages[page_num]
             text += page.extract_text()
         if 'HQLインジェクション' in text:
-            result_msg_buffer.append('+ レポートPDFは日本語で出力されていません。')
+            result_msg_buffer.append('+ レポートPDFは日本語で出力されています。')
         else:
             err_msg_buffer.append('* レポートPDFには「HQLインジェクション」が含まれていません。')
 
