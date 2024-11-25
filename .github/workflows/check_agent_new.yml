@@ -157,7 +157,8 @@ jobs:
           payload: |
             {   
               "version": "${{ steps.get-newer-version.outputs.NEWER_VERSION }}",
-              "result": "${{ steps.verify_output.outputs.RESULT }}"
+              "result": "${{ steps.verify_output.outputs.RESULT }}",
+              "workflow_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
             }   
       - if: steps.get-newer-version.outputs.NEWER_VERSION != ''
         name: Commit updated pom.xml
