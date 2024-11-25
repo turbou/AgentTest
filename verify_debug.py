@@ -192,7 +192,6 @@ def main():
             err_msg_buffer.append('* レポートPDFには「HQLインジェクション」が含まれていません。')
 
     output_buffer = []
-    output_buffer.append('検証結果\\n') 
     output_buffer.append('```')
     output_buffer.append('\\n'.join(result_msg_buffer))
     output_buffer.append('-----------------------------------------------------------') 
