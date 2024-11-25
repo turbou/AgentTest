@@ -21,7 +21,7 @@ jobs:
         run: |
           ./agent_check.sh
           echo "CURRENT_VERSION=`cat ./current_version.txt`" >> "$GITHUB_OUTPUT"
-          echo "NEWER_VERSION=`cat ./newer_version.txt`" >> "$GITHUB_OUTPUT"
+          echo "NEWER_VERSION=`cat ./current_version.txt`" >> "$GITHUB_OUTPUT"
       - if: steps.get-newer-version.outputs.NEWER_VERSION != ''
         name: Download Java Agent
         id: agent_download
