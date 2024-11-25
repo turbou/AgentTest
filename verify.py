@@ -194,7 +194,7 @@ def main():
     output_buffer = []
     output_buffer.append('結果発表') 
     output_buffer.append('-------------------------------------------------') 
-    ouput_buffer.append('\n'.join(result_msg_buffer))
+    output_buffer.append('\n'.join(result_msg_buffer))
     output_buffer.append('-------------------------------------------------') 
     if len(err_msg_buffer) > 0:
         output_buffer.append('検証が失敗しました。')
