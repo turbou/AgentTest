@@ -118,8 +118,8 @@ def main():
     result_msg_buffer.append('+ %d/%d のライブラリを検知しました。' % (len(all_vuln_libraries), len(all_libraries)))
     if len(all_libraries) < 112:
         err_msg_buffer.append('* ライブラリの数が足りません。%d/112' % (len(all_libraries)))
-    if len(all_vuln_libraries) < 29:
-        err_msg_buffer.append('* 脆弱ライブラリの数が足りません。%d/29' % (len(all_vuln_libraries)))
+    if len(all_vuln_libraries) < 36:
+        err_msg_buffer.append('* 脆弱ライブラリの数が足りません。%d/36' % (len(all_vuln_libraries)))
 
     # /Contrast/api/ng/442311fd-c9d6-44a9-a00b-2b03db2d816c/applications/9c6ce833-0fea-46e1-875e-c5371ecd2bbe/route?expand=skip_links
     all_routes = []
