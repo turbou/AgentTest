@@ -26,7 +26,7 @@ jobs:
         name: Download Node Agent
         id: agent_download
         run: |
-            npm install @contrast/agent@steps.get-newer-version.outputs.NEWER_VERSION --save-exact
+            npm install @contrast/agent@${{ steps.get-newer-version.outputs.NEWER_VERSION }} --save-exact
       - if: steps.get-newer-version.outputs.CURRENT_VERSION != steps.get-newer-version.outputs.NEWER_VERSION
         name: Send GitHub Action trigger data to Slack workflow
         id: slack
