@@ -1,4 +1,4 @@
-name: Java Agent Check New
+name: Node.js Agent Check
 
 on:
   #schedule: 
