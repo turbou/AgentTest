@@ -1,7 +1,7 @@
 name: Java Agent Check New
 
 on:
-  schedule: 
+  schedule:
     - cron: "0 3,9,15,21 * * *"
   workflow_dispatch:
 
@@ -43,9 +43,9 @@ jobs:
       - if: steps.get-newer-version.outputs.NEWER_VERSION != ''
         name: Reset Contrast Application
         env:
-          CONTRAST_AUTHORIZATION: ${{ secrets.CONTRAST_AUTHORIZATION }} 
-          CONTRAST_API_KEY: ${{ secrets.CONTRAST_API_KEY }} 
-          CONTRAST_ORG_ID: ${{ vars.CONTRAST_ORG_ID }} 
+          CONTRAST_AUTHORIZATION: ${{ secrets.CONTRAST_AUTHORIZATION }}
+          CONTRAST_API_KEY: ${{ secrets.CONTRAST_API_KEY }}
+          CONTRAST_ORG_ID: ${{ vars.CONTRAST_ORG_ID }}
         run: |
           python reset_app.py
           sleep 60
@@ -126,10 +126,10 @@ jobs:
         id: verify_process
         name: Verify result
         env:
-          CONTRAST_AUTHORIZATION: ${{ secrets.CONTRAST_AUTHORIZATION }} 
-          CONTRAST_API_KEY: ${{ secrets.CONTRAST_API_KEY }} 
-          CONTRAST_ORG_ID: ${{ vars.CONTRAST_ORG_ID }} 
-          CONTRAST_USER_NAME: ${{ vars.CONTRAST_USER_NAME }} 
+          CONTRAST_AUTHORIZATION: ${{ secrets.CONTRAST_AUTHORIZATION }}
+          CONTRAST_API_KEY: ${{ secrets.CONTRAST_API_KEY }}
+          CONTRAST_ORG_ID: ${{ vars.CONTRAST_ORG_ID }}
+          CONTRAST_USER_NAME: ${{ vars.CONTRAST_USER_NAME }}
         run: |
           python verify.py
       - if: steps.get-newer-version.outputs.NEWER_VERSION != ''
@@ -150,18 +150,30 @@ jobs:
           name: petclinic-report
           path: report.pdf
       - if: steps.get-newer-version.outputs.NEWER_VERSION != ''
-        name: Send GitHub Action trigger data to Slack workflow
-        id: slack
+        name: Send GitHub Action trigger data(update) to Slack workflow
+        id: slack_update
         uses: slackapi/slack-github-action@v1.27.0
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WORKFLOW_WEBHOOK_URL }}  
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WORKFLOW_WEBHOOK_URL_4UPDATE }}
         with:
           payload: |
-            {   
+            {
+              "language": "Java",
+              "version": "${{ steps.get-newer-version.outputs.NEWER_VERSION }}"
+            }
+      - if: steps.get-newer-version.outputs.NEWER_VERSION != ''
+        name: Send GitHub Action trigger data(result) to Slack workflow
+        id: slack_result
+        uses: slackapi/slack-github-action@v1.27.0
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WORKFLOW_WEBHOOK_URL }}
+        with:
+          payload: |
+            {
               "version": "${{ steps.get-newer-version.outputs.NEWER_VERSION }}",
               "result": "${{ steps.verify_output.outputs.RESULT }}",
               "workflow_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-            }   
+            }
       - if: steps.get-newer-version.outputs.NEWER_VERSION != ''
         name: Commit updated pom.xml
         id: commit_push
