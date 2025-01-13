@@ -1,0 +1,55 @@
+name: Java Agent Check New
+
+on:
+  #schedule: 
+  #  - cron: "0 3,9,15,21 * * *"
+  workflow_dispatch:
+
+jobs:
+  agentcheck:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4.2.1
+      - name: Set up Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+      - name: Build with npm
+        id: get-newer-version
+        run: |
+          npm install
+          echo "CURRENT_VERSION=`npm list @contrast/agent --json | grep '"version"' | awk -F: '{print $NF}' | grep -oE '[0-9]+\.[0-9]+\.[0-9]+'`" >> "$GITHUB_OUTPUT"
+          echo "NEWER_VERSION=`npm view @contrast/agent version`" >> "$GITHUB_OUTPUT"
+      - if: steps.get-newer-version.outputs.CURRENT_VERSION != steps.get-newer-version.outputs.NEWER_VERSION
+        name: Download Node Agent
+        id: agent_download
+        run: |
+            npm install @contrast/agent@steps.get-newer-version.outputs.NEWER_VERSION --save-exact
+      - if: steps.get-newer-version.outputs.CURRENT_VERSION != steps.get-newer-version.outputs.NEWER_VERSION
+        name: Send GitHub Action trigger data to Slack workflow
+        id: slack
+        uses: slackapi/slack-github-action@v1.27.0
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WORKFLOW_WEBHOOK_URL_TEST }}  
+        with:
+          payload: |
+            {   
+              "version": "${{ steps.get-newer-version.outputs.NEWER_VERSION }}",
+              "result": "${{ steps.verify_output.outputs.RESULT }}",
+              "workflow_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            }   
+      - if: steps.get-newer-version.outputs.CURRENT_VERSION != steps.get-newer-version.outputs.NEWER_VERSION
+        name: Commit updated package.json
+        id: commit_push
+        run: |
+            git config core.filemode false
+            if ! git diff --exit-code --quiet ./package.json
+            then
+              git config user.name turbou
+              git config user.email turbou@i.softbank.jp
+              git commit -m "${{ steps.get-newer-version.outputs.CURRENT_VERSION }} -> ${{ steps.get-newer-version.outputs.NEWER_VERSION }}." ./package.json
+              git push
+            fi
+

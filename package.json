@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@contrast/agent": "5.22.0"
+  }
+}
