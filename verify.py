@@ -49,6 +49,17 @@ def main():
 
     headers = {"Accept": "application/json", "Content-Type": "application/json", "API-Key": API_KEY, "Authorization": AUTHORIZATION}
 
+    # TeamServer基本情報
+    url_properties = '%s/api/ng/global/properties?expand=skip_links' % (BASEURL)
+    r = requests.get(url_properties, headers=headers)
+    data = r.json()
+    if not data['success']:
+        print('Authorizationヘッダ, APIキー, 組織ID, TeamServerのURLが正しいか、ご確認ください。')
+        return
+    teamserver_version = data['version']
+    with open("teamserver_version.txt", "w") as f:
+        f.write(teamserver_version)
+
     url_applications = '%s/applications/name' % (API_URL)
     r = requests.get(url_applications, headers=headers)
     data = r.json()

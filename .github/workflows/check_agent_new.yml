@@ -143,6 +143,7 @@ jobs:
         name: Output Verify Result
         run: |
           echo "RESULT=`cat ./output.txt`" >> "$GITHUB_OUTPUT"
+          echo "TEAMSERVER_VERSION=`cat ./teamserver_version.txt`" >> "$GITHUB_OUTPUT"
       - if: steps.get-newer-version.outputs.NEWER_VERSION != ''
         name: Upload artifact report.pdf
         uses: actions/upload-artifact@v4.4.3
@@ -172,6 +173,7 @@ jobs:
             {
               "version": "${{ steps.get-newer-version.outputs.NEWER_VERSION }}",
               "result": "${{ steps.verify_output.outputs.RESULT }}",
+              "teamserver_version": "${{ steps.verify_output.outputs.TEAMSERVER_VERSION }}",
               "workflow_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
             }
       - if: steps.get-newer-version.outputs.NEWER_VERSION != ''
