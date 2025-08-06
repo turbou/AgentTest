@@ -8,7 +8,7 @@
     <dependency>
       <groupId>com.contrastsecurity</groupId>
       <artifactId>contrast-agent</artifactId>
-      <version>6.19.0</version>
+      <version>6.20.1</version>
     </dependency>
   </dependencies>
 </project>
