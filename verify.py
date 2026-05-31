@@ -90,7 +90,8 @@ def main():
         url_trace = '%s/traces/%s/trace/%s' % (API_URL, app_id, trace_id)
         r = requests.get(url_trace, headers=headers)
         data = r.json()
-        #print(data['trace']['rule_name'])
+        print(json.dumps(data, indent=4))
+        print(data['trace']['rule_name'])
         if data['trace']['rule_name'] in CHECK_RULE_LIST:
             exist_vul_msg.append(data['trace']['rule_name'])
             CHECK_RULE_LIST.remove(data['trace']['rule_name'])
