@@ -53,6 +53,7 @@ def main():
     url_properties = '%s/api/ng/global/properties?expand=skip_links' % (BASEURL)
     r = requests.get(url_properties, headers=headers)
     data = r.json()
+    print(json.dumps(data, indent=4))
     if not data['success']:
         print('Authorizationヘッダ, APIキー, 組織ID, TeamServerのURLが正しいか、ご確認ください。')
         return
